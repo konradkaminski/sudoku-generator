@@ -101,61 +101,43 @@ class SudokuGenerator {
     }
     
     private function shuffle() {
-        
         $randomNumber = rand(7, 20);
-        // liczba operacji
         for($j = 0; $j < $randomNumber; $j++) {
             if(rand(0, 1) == 1) {
-                // czy transponowac tabele
                 $this->table = $this->transpose($this->table);
             }
-            // dla kazdego kafelka
             for($i = 0; $i < $this->size; $i++) {
-                
                 $minRow = $i * $this->size;
                 $maxRow = $minRow + $this->size - 1;
                 $transform = $this->transformationMatrix($minRow, $maxRow);
-                // zamiana wierszy
                 $rowA = $this->table[$transform[0]];
                 $rowB = $this->table[$transform[1]];
                 $this->table[$transform[1]] = $rowA;
                 $this->table[$transform[0]] = $rowB;
                 
                 if(rand(0, 1) == 1) {
-                    // czy podmieniac liczby w wierszach
                     $minRow = $i * $this->size;
                     $maxRow = $minRow + $this->size - 1;
                     $transform = $this->transformationMatrix($minRow, $maxRow);
-                    
                     $key = rand(0, 8);
-                    
                     $keys = array();
-                    
-                    $tmpNumbers = array(
-                    );
-                    
+                    $tmpNumbers = array();
                     $finish = true;
                     do {
                         $tmpNumbers[] = $this->table[$transform[0]][$key];
                         $secondNumber = $this->table[$transform[1]][$key];
-                        
                         if(in_array($secondNumber, $tmpNumbers)) {
                             $finish = true;
                         } else {
                             $finish = false;
                         }
                         $keys[] = $key;
-                        
                         $key = array_search($secondNumber, $this->table[$transform[0]]);
-                        
                     } while($finish != true);
-                    
                     if(count($keys) != 1 && count($keys) != $this->factor) {
-                    
                         foreach($keys as $key) {
                             $nA = $this->table[$transform[0]][$key];
                             $nB = $this->table[$transform[1]][$key];
-                            
                             $this->table[$transform[1]][$key] = $nA;
                             $this->table[$transform[0]][$key] = $nB;
                         }
